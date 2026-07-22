@@ -1,6 +1,4 @@
-"""
-Módulo de ingesta: descarga, filtra y persiste los datos de la Copa Mundial.
-"""
+
 import os
 import requests
 import pandas as pd

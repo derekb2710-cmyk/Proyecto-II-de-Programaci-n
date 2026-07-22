@@ -1,6 +1,4 @@
-"""
-Módulo de EDA: limpieza, columnas derivadas y estadística descriptiva.
-"""
+
 import pandas as pd
 import numpy as np
 
@@ -115,7 +113,7 @@ class ProcesadorEDA:
         return round(detalle["llego_semifinales"].mean() * 100, 2)
 
     def ejecutar_pipeline_completo(self) -> pd.DataFrame:
-        #Corre limpieza + columnas derivadas en un solo paso.#
+        #Corre limpieza y columnas derivadas en un solo paso.#
         self.limpieza_datos()
         self.crear_columnas_derivadas()
         return self.df

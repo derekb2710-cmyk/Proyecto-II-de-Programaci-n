@@ -1,41 +1,34 @@
-"""
-Módulo de consultas: expone métodos de solo lectura sobre el DataFrame de partidos.
-"""
+
 import pandas as pd
 
 
 class GestorPartidos:
-    """
-    Expone métodos de solo lectura para consultar el DataFrame de partidos
-    de la Copa Mundial (por id, equipo, año, sede, etc.).
-    """
+
 
     def __init__(self, df: pd.DataFrame):
         self.df = df.reset_index(drop=True)
         self.df["id_partido"] = self.df.index
 
     def get_partido(self, id_partido: int) -> pd.Series:
-        """Retorna un partido específico por su id (índice)."""
+        #Retorna un partido específico por su id (índice).#
         return self.df.loc[self.df["id_partido"] == id_partido].squeeze()
 
     def get_por_equipo(self, equipo: str) -> pd.DataFrame:
-        """Retorna todos los partidos donde un equipo jugó como local o visitante."""
+        #Retorna todos los partidos donde un equipo jugó como local o visitante.#
         return self.df[
             (self.df["home_team"] == equipo) | (self.df["away_team"] == equipo)
         ]
 
     def get_por_anio(self, anio: int) -> pd.DataFrame:
-        """Retorna todos los partidos de un año/edición específica."""
+        #Retorna todos los partidos de un año/edición específica.#
         return self.df[pd.to_datetime(self.df["date"]).dt.year == anio]
 
     def get_por_sede(self, pais: str) -> pd.DataFrame:
-        """Retorna todos los partidos jugados en un país sede."""
+        #Retorna todos los partidos jugados en un país sede.#
         return self.df[self.df["country"] == pais]
 
     def ventaja_local(self) -> dict:
-        #Calcula el porcentaje de victorias locales, visitantes y empates,
-        #para medir si existe 'ventaja de local' en el Mundial (recordando que
-        #muchos partidos son en cancha neutral).
+        #Calcula el porcentaje de victorias locales, visitantes y empates y ayuda a verificar si hay ventaja en local
         total = len(self.df)
         locales = (self.df["home_score"] > self.df["away_score"]).sum()
         visitantes = (self.df["home_score"] < self.df["away_score"]).sum()

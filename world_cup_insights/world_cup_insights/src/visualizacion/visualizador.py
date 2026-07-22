@@ -1,29 +1,21 @@
-"""
-Módulo de visualización: gráficos interactivos con Plotly que cuentan
-una historia sobre los datos del Mundial.
-"""
+
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
 
 class Visualizador:
-    #Crea gráficos (líneas, barras, heatmaps, dispersión) a partir del
-    #DataFrame procesado del Mundial. Cada método retorna una figura de
-    #Plotly lista para mostrarse en un notebook o en Streamlit.
-
-    # Paleta de colores del proyecto (cancha + trofeo).
-    # Cambia estos valores para ajustar los colores de TODOS los gráficos.
-    COLOR_PRIMARIO = "#FFC300"     # dorado (acento principal)
-    COLOR_SECUNDARIO = "#1E7A46"   # verde cancha
-    COLOR_TERCIARIO = "#0B1F13"    # verde oscuro/fondo
+    #Crea gráficos (líneas, barras, heatmaps, dispersión)
+    COLOR_PRIMARIO = "#FFC300"
+    COLOR_SECUNDARIO = "#1E7A46"
+    COLOR_TERCIARIO = "#0B1F13"
     PALETA_CATEGORICA = ["#FFC300", "#1E7A46", "#4FC3F7", "#E63946"]
 
     def __init__(self, df: pd.DataFrame):
         self.df = df
 
     def evolucion_goles_por_edicion(self) -> go.Figure:
-        #Historia: ¿en qué Mundial se metieron más goles por partido?#
+        # qué Mundial se metieron más goles por partido#
         promedio = self.df.groupby("anio")["total_goles"].mean().reset_index()
         fig = px.line(
             promedio, x="anio", y="total_goles", markers=True,
@@ -34,7 +26,7 @@ class Visualizador:
         return fig
 
     def distribucion_resultados(self) -> go.Figure:
-        #Historia: ¿el local, el visitante o el empate dominan el Mundial?#
+        #calcula victorias, derrotas y empates#
         conteo = self.df["ganador"].value_counts().reset_index()
         conteo.columns = ["resultado", "cantidad"]
         fig = px.bar(
@@ -45,7 +37,7 @@ class Visualizador:
         return fig
 
     def top_equipos_goleadores(self, top_n=10) -> go.Figure:
-        #Historia: ¿qué selección tiene la mejor diferencia de goles histórica?#
+        #qué selección tiene la mejor diferencia de goles histórica#
         local = self.df.groupby("home_team")["diferencia_goles"].sum()
         visitante = self.df.groupby("away_team")["diferencia_goles"].sum() * -1
         total = local.add(visitante, fill_value=0).sort_values(ascending=False).head(top_n)
